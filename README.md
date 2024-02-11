@@ -1,2 +1,1 @@
-# login_with_fastapi
-Sistema de login com FastAPI
+# Sitema de login utilizando o FastAPI, PostgreSQL e JWT.
