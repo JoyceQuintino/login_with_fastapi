@@ -1,22 +1,25 @@
 from datetime import datetime, timedelta
-from fastapi.exceptions import HTTPException
 from fastapi import status
+from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-from app.db.models import UserModel
-from app.schemas import User
 from passlib.context import CryptContext
 from jose import jwt, JWTError
 from decouple import config
+from app.db.models import UserModel
+from app.schemas import User
+
 
 SECRET_KEY = config('SECRET_KEY')
 ALGORITHM = config('ALGORITHM')
 
 crypt_context = CryptContext(schemes=['sha256_crypt'])
 
+
 class UserUseCases:
     def __init__(self, db_session: Session):
         self.db_session = db_session
+
 
     def user_register(self, user: User):
         user_model = UserModel(
@@ -40,23 +43,32 @@ class UserUseCases:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail='Invalid username or password'
             )
-
+        
         if not crypt_context.verify(user.password, user_on_db.password):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail='Invalid username or password'
             )
         
-        exp = datetime.utcnow() + timedelta(minutes=expires_in) 
+        exp = datetime.utcnow() + timedelta(minutes=expires_in)
 
         payload = {
             'sub': user.username,
             'exp': exp
         }
 
-        access_token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM) 
+        access_token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
         return {
             'access_token': access_token,
             'exp': exp.isoformat()
         }
+
+    def verify_token(self, access_token):
+        try:
+            data = jwt.decode(access_token, SECRET_KEY, algorithms=[ALGORITHM])
+        except JWTError:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail='Invalid access token'
+            )
