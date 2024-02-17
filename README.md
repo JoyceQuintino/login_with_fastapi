@@ -1,4 +1,4 @@
-# Sitema de login utilizando o FastAPI, PostgreSQL e jwt.
+# Sistema de login utilizando o FastAPI, PostgreSQL e jwt.
 Neste projeto de login são criados três endpoints, são eles: register, login e test auth. 
 Endpoints: 
 - `register`: são passados user e password possibilitando o cadastro de usuário no banco de dados.
