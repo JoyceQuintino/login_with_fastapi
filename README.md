@@ -9,5 +9,5 @@ Utilizei o poetry para gerenciamento de dependências no Python, uvicorn como se
 
 Alguns comandos de interesse para rodar neste projeto:
 - `uvicorn app.main:app --reload`: rodar o projeto para realizar o cadastro, efetuar login e testar o token gerado.
-- - `alembic revision --autogenerate -m'comments about update'`: gerar uma migration atualizada.
+- `alembic revision --autogenerate -m'comments about update'`: gerar uma migration atualizada.
 - `alembic upgrade head`: rodar a migration para aplicar as alterações no banco de dados.
